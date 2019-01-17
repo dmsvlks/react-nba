@@ -1,0 +1,100 @@
+.loading {
+  display: inline-block;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.5rem;
+}
+
+.teamName {
+  margin-top: 20px;
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+@media screen and (max-width: 600px) {
+  .teamName {
+    margin-top: 30px;
+  }
+}
+
+.info {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.info .teamInfo {
+  display: flex;
+  margin-left: 20px;
+}
+
+@media screen and (max-width: 600px) {
+  .info .teamInfo {
+    margin-left: 0;
+    justify-content: center;
+  }
+}
+
+.info .teamInfo .left {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  font-weight: bolder;
+}
+
+.info .teamInfo .left div {
+  margin-bottom: 8px;
+}
+
+.info .teamInfo .right {
+  display: flex;
+  flex-direction: column;
+}
+
+.info .teamInfo .right div {
+  padding-left: 10px;
+  margin-bottom: 8px;
+}
+
+
+.season-statistics {
+
+}
+
+.season-statistics th:hover {
+  cursor: help;
+}
+
+
+.season-statistics th:hover {
+  cursor: help;
+}
+
+.team-rankings th:not(:first-child):hover {
+  cursor: help;
+}
+
+.roster {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 10px;
+  width: 500px;
+  padding-top: 10px;
+}
+
+.roster .player{
+  width: 90px;
+  margin: 0 30px 30px 0;
+}
+
+.leaders {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  width: 100%;
+  margin-top: 15px;
+}
