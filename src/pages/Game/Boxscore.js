@@ -109,7 +109,7 @@ class Boxscore extends Component {
           <Stat style={{ minWidth: 40, maxWidth: 50 }}>+/-</Stat>
           <Stat style={{ minWidth: 40, maxWidth: 50 }}>PTS</Stat>
         </div>
-        <div style={{ padding: 15, paddingTop: 5, paddingBottom: 5 }}>
+        <div style={{ padding: 15, paddingTop: 0, paddingBottom: 0 }}>
           {players.map((player, index) => (
             <Row
               key={player.personId}
