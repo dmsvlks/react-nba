@@ -161,10 +161,8 @@ class Player extends Component {
           </Info>
 
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <FadeDown>
-              <Recent player={player} addOppTeam={this.addOppTeam} addScore={this.addScore} />
-              <CareerStats stats={player.stats} addTeam={this.addTeam} />
-            </FadeDown>
+            <Recent player={player} addOppTeam={this.addOppTeam} addScore={this.addScore} />
+            <CareerStats stats={player.stats} addTeam={this.addTeam} />
           </div>
         </div>
       );
