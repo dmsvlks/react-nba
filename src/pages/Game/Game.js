@@ -44,7 +44,7 @@ class Game extends Component {
     const { data, teams } = this.state;
 
     if (!data || !teams) {
-      return <div />;
+      return <></>;
     }
 
     console.log(data, teams);

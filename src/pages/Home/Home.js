@@ -132,6 +132,10 @@ class Home extends Component {
     }
   };
 
+  navigate = path => {
+    this.props.history.push(path);
+  };
+
   componentWillUnmount() {
     clearInterval(this.interval);
     window.removeEventListener('resize', this.handleResize);
@@ -161,7 +165,7 @@ class Home extends Component {
             </Navigation>
 
             {games.map(game => (
-              <Game key={game.gameId} date={date} teams={teams} data={game} />
+              <Game navigate={this.navigate} key={game.gameId} date={date} teams={teams} data={game} />
             ))}
           </CenterPanel>
         )}

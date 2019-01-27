@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import format from 'date-fns/format';
 import isPast from 'date-fns/is_past';
 import styled from 'styled-components';
-import { Link } from 'react-router-dom';
 
 import Team from './Team/Team';
 
@@ -46,6 +45,10 @@ const Periods = styled.div`
     width: 30px;
     text-align: center;
   }
+`;
+
+const DisabableLink = styled.div`
+  ${props => props.started && 'cursor: pointer;'}
 `;
 
 class Game extends Component {
@@ -106,6 +109,12 @@ class Game extends Component {
     }
   };
 
+  toGameInfo = e => {
+    if (isPast(this.props.data.startTimeUTC)) {
+      this.props.navigate(`/boxscore/${this.props.date}/${this.props.data.gameId}`);
+    }
+  };
+
   render() {
     const { data, teams } = this.props;
 
@@ -120,10 +129,7 @@ class Game extends Component {
 
     return (
       <Wrapper>
-        <Link
-          style={{ textDecoration: 'none', color: 'hsl(0, 0%, 20%)' }}
-          to={`/boxscore/${this.props.date}/${this.props.data.gameId}`}
-        >
+        <DisabableLink started={started} onClick={this.toGameInfo}>
           <Header>
             <Info active={data.isGameActivated}>{this.getInfoText(data)}</Info>
             {started && (
@@ -151,7 +157,7 @@ class Game extends Component {
               started={started}
             />
           </Main>
-        </Link>
+        </DisabableLink>
       </Wrapper>
     );
   }

@@ -67,7 +67,7 @@ class Team extends Component {
     return (
       <Wrapper away={away} lost={lost}>
         <TeamLink>
-          <StyledLink lost={lost ? 1 : 0} to={`teams/${data.teamId}`}>
+          <StyledLink lost={lost ? 1 : 0} to={`teams/${data.teamId}`} onClick={e => e.stopPropagation()}>
             <Image lost={lost}>
               <img src={`${process.env.PUBLIC_URL}/assets/teamLogos/${data.teamId}.png`} alt={data.nickname} />
             </Image>

@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
-import { Picture, Loader } from '../../components';
-import { PlayerInfo, Teams, Recent, CareerStats } from './components';
+import { Loader } from '../../components';
+import { Recent, CareerStats } from './components';
 import { searchPlayerById } from '../../services/http-service';
 import FadeDown from '../../animations/FadeDown';
 import FadeScaleUp from '../../animations/FadeScaleUp';
@@ -17,8 +17,10 @@ const Info = styled.div`
   justify-content: center;
 `;
 
-const Image = styled.div`
+const ProfileImage = styled.div`
+  min-width: 200px;
   width: 200px;
+  min-width: 200px;
   margin-right: 30px;
 `;
 
@@ -39,7 +41,8 @@ const Right = styled.div`
 
 class Player extends Component {
   state = {
-    player: null
+    player: null,
+    profilePictureSource: null
   };
 
   componentWillMount() {
@@ -51,9 +54,16 @@ class Player extends Component {
     const personId = this.props.match.params.id;
     if (!this.state.player) {
       const player = await searchPlayerById(personId);
-      console.log(player);
       this.setState({ player });
       cachedPlayers[personId] = player;
+
+      const image = new Image();
+      image.onload = () => {
+        this.setState({
+          profilePictureSource: image.src
+        });
+      };
+      image.src = `${process.env.PUBLIC_URL}/assets/players/${player.personId}.png`;
     }
   }
 
@@ -87,82 +97,92 @@ class Player extends Component {
   };
 
   render() {
+    const { profilePictureSource } = this.state;
+
     if (this.state.player) {
       const player = this.state.player;
       return (
         <div>
           <Info>
-            <Image>
-              <img
-                style={{ width: '100%' }}
-                src={`${process.env.PUBLIC_URL}/assets/players/${player.personId}.png`}
-                alt={`${player.firstName} ${player.lastName}`}
-              />
-            </Image>
-
-            <Middle>
-              <div style={{ display: 'flex' }}>
-                <div style={{ marginRight: 15, fontSize: '2.5rem', color: 'hsl(40, 45%, 55%)', fontWeight: 'bold' }}>
-                  {player.jersey}
-                </div>
-                <div>
-                  <div style={{ fontSize: '1.7rem', fontWeight: 'bold', marginBottom: 10 }}>
-                    {player.firstName.toUpperCase()} {player.lastName.toUpperCase()}
+            <FadeScaleUp>
+              <ProfileImage>
+                {profilePictureSource && (
+                  <img
+                    style={{ width: '100%' }}
+                    src={profilePictureSource}
+                    alt={`${player.firstName} ${player.lastName}`}
+                  />
+                )}
+              </ProfileImage>
+            </FadeScaleUp>
+            <FadeDown>
+              <Middle>
+                <div style={{ display: 'flex' }}>
+                  <div style={{ marginRight: 15, fontSize: '2.5rem', color: 'hsl(40, 45%, 55%)', fontWeight: 'bold' }}>
+                    {player.jersey}
                   </div>
                   <div>
-                    {player.pos} / <Link to={`/teams/${player.teamId}`}>{player.teams.slice(-1)[0].team.fullName}</Link>
+                    <div style={{ fontSize: '1.7rem', fontWeight: 'bold', marginBottom: 10 }}>
+                      {player.firstName.toUpperCase()} {player.lastName.toUpperCase()}
+                    </div>
+                    <div>
+                      {player.pos} /{' '}
+                      <Link to={`/teams/${player.teamId}`}>{player.teams.slice(-1)[0].team.fullName}</Link>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div style={{ display: 'flex', marginTop: 'auto' }}>
-                <div style={{ marginRight: 15, textAlign: 'center' }}>
-                  <div style={{ marginBottom: 5 }}>PPG</div>
-                  <div style={{ fontSize: '1.4rem', fontWeight: 'bold' }}>
-                    {Number(player.stats.latest.ppg).toFixed(1)}
+                <div style={{ display: 'flex', marginTop: 'auto' }}>
+                  <div style={{ marginRight: 15, textAlign: 'center' }}>
+                    <div style={{ marginBottom: 5 }}>PPG</div>
+                    <div style={{ fontSize: '1.4rem', fontWeight: 'bold' }}>
+                      {Number(player.stats.latest.ppg).toFixed(1)}
+                    </div>
+                  </div>
+                  <div style={{ marginRight: 15, textAlign: 'center' }}>
+                    <div style={{ marginBottom: 5 }}>RPG</div>
+                    <div style={{ fontSize: '1.4rem', fontWeight: 'bold' }}>
+                      {Number(player.stats.latest.rpg).toFixed(1)}
+                    </div>
+                  </div>
+                  <div style={{ marginRight: 15, textAlign: 'center' }}>
+                    <div style={{ marginBottom: 5 }}>APG</div>
+                    <div style={{ fontSize: '1.4rem', fontWeight: 'bold' }}>
+                      {Number(player.stats.latest.apg).toFixed(1)}
+                    </div>
                   </div>
                 </div>
-                <div style={{ marginRight: 15, textAlign: 'center' }}>
-                  <div style={{ marginBottom: 5 }}>RPG</div>
-                  <div style={{ fontSize: '1.4rem', fontWeight: 'bold' }}>
-                    {Number(player.stats.latest.rpg).toFixed(1)}
-                  </div>
+              </Middle>
+              <Right>
+                <div>
+                  Date of Birth: <span style={{ fontWeight: 'bold' }}>{player.dateOfBirthUTC}</span>
                 </div>
-                <div style={{ marginRight: 15, textAlign: 'center' }}>
-                  <div style={{ marginBottom: 5 }}>APG</div>
-                  <div style={{ fontSize: '1.4rem', fontWeight: 'bold' }}>
-                    {Number(player.stats.latest.apg).toFixed(1)}
-                  </div>
+                <div>
+                  Height, weight:{' '}
+                  <span style={{ fontWeight: 'bold' }}>
+                    {player.heightMeters}m / {player.weightKilograms}kg
+                  </span>
                 </div>
-              </div>
-            </Middle>
-            <Right>
-              <div>
-                Date of Birth: <span style={{ fontWeight: 'bold' }}>{player.dateOfBirthUTC}</span>
-              </div>
-              <div>
-                Height, weight:{' '}
-                <span style={{ fontWeight: 'bold' }}>
-                  {player.heightMeters}m / {player.weightKilograms}kg
-                </span>
-              </div>
-              <div>
-                Draft year, pick:{' '}
-                <span style={{ fontWeight: 'bold' }}>
-                  {player.nbaDebutYear} / {player.draft.pickNum}
-                </span>
-              </div>
-              <div>
-                Years pro: <span style={{ fontWeight: 'bold' }}>{Number(player.yearsPro) + 1}</span>
-              </div>
-              <div>
-                College, country: <span style={{ fontWeight: 'bold' }}>{player.lastAffiliation}</span>
-              </div>
-            </Right>
+                <div>
+                  Draft year, pick:{' '}
+                  <span style={{ fontWeight: 'bold' }}>
+                    {player.nbaDebutYear} / {player.draft.pickNum}
+                  </span>
+                </div>
+                <div>
+                  Years pro: <span style={{ fontWeight: 'bold' }}>{Number(player.yearsPro) + 1}</span>
+                </div>
+                <div>
+                  College, country: <span style={{ fontWeight: 'bold' }}>{player.lastAffiliation}</span>
+                </div>
+              </Right>
+            </FadeDown>
           </Info>
 
           <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-            <Recent player={player} addOppTeam={this.addOppTeam} addScore={this.addScore} />
-            <CareerStats stats={player.stats} addTeam={this.addTeam} />
+            <FadeDown>
+              <Recent player={player} addOppTeam={this.addOppTeam} addScore={this.addScore} />
+              <CareerStats stats={player.stats} addTeam={this.addTeam} />
+            </FadeDown>
           </div>
         </div>
       );
